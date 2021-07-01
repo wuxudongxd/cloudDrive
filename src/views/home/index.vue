@@ -3,7 +3,7 @@
         <div class="w-52 bg-gray-100 shadow flex flex-col justify-between">
             <div class="flex flex-col items-center space-y-7">
                 <span>
-                    <CloudIcon class="h-16 w-16 ml-3"/>简存取云盘
+                    <SvgIcon name="云盘" class="h-16 w-16 ml-3"></SvgIcon>简存取云盘
                 </span>
                 <a v-for="item in choiceItem" :key="item.id" @click="changeItem">
                     {{
@@ -19,10 +19,10 @@
         </div>
     </div>
 </template>
-<script setup>
+<script lang="ts" setup>
 import router from "@/router";
 import Headbar from "@/components/headbar.vue";
-import { CloudIcon } from "@heroicons/vue/solid";
+import SvgIcon from '@/components/SvgIcon.vue';
 
 const choiceItem = [
     { id: 1, name: "文件", link: "" },
@@ -33,7 +33,7 @@ const choiceItem = [
     { id: 6, name: "视频", link: "video" },
     { id: 7, name: "图片", link: "picture" },
 ];
-const changeItem = (param) => {
+const changeItem = (param: any) => {
     for (const item of choiceItem) {
         if (param.target.innerText === item.name) {
             router.push("/" + item.link);
