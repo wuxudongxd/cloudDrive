@@ -7,11 +7,7 @@ import path from "path";
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-      "components": path.resolve(__dirname, "src/components"),
-      "views": path.resolve(__dirname, "src/views"),
-      "utils": path.resolve(__dirname, "src/utils"),
-      "apis": path.resolve(__dirname, "src/apis"),
+      "@": path.resolve(__dirname, "./src"), //设置别名
     },
   },
   plugins: [vue()],
