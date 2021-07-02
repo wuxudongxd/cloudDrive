@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-row h-screen">
-    <Sidebar/>
+  <div class="flex h-screen">
+    <Sidebar />
     <div class="flex-1">
       <Headbar />
       <Toolbar />
@@ -11,6 +11,5 @@
 <script lang="ts" setup>
 import Headbar from "@/components/headbar.vue";
 import Toolbar from "@/components/toolbar.vue";
-import Sidebar from '@/components/sidebar.vue'
-
+import Sidebar from "@/components/sidebar.vue";
 </script>

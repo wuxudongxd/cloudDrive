@@ -11,7 +11,7 @@
         @click="changeItem"
         :class="[
           item.current ? 'bg-gray-300' : '',
-          'h-12 w-full pl-10 mt-1 flex items-center hover:bg-gray-300 transition-all duration-200 ease-in-out rounded-md cursor-pointer',
+          'h-12 w-full pl-10 mt-1 flex items-center hover:bg-gray-300 transition duration-200 ease-in-out rounded-md cursor-pointer',
         ]"
       >
         <SvgIcon :name="item.icon" class="h-5 w-5 mr-3 mt-0.5"></SvgIcon>
@@ -23,7 +23,7 @@
         <div class="flex overflow-hidden rounded h-2 bg-gray-200">
           <div
             style="width: 50%"
-            class="bg-green-500 rounded transition-all duration-300 ease-in-out"
+            class="bg-green-500 rounded transition duration-300 ease-in-out"
           ></div>
         </div>
         <div class="text-xs mt-2 text-gray-600">4.4G/10GB</div>
