@@ -15,10 +15,10 @@
       <div
         v-if="isOpen"
         ref="selectMenu"
-        class="fixed top-18 right-10 w-48 z-50 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200 transition"
+        class="fixed top-18 right-10 w-48 z-50 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200"
       >
         <router-link
-          class="flex px-4 py-2 text-gray-800 hover:bg-indigo-400 hover:text-white transition duration-300 ease-in-out"
+          class="flex px-4 py-2 text-gray-800 hover:bg-indigo-400 hover:text-white"
           v-for="item in selectItems"
           :to="item.link"
         >
@@ -52,11 +52,11 @@ const selectItems = reactive([
 const selectMenu = ref<HTMLElement | null>(null);
 const changeSelect = () => {
   isOpen.value = !isOpen.value;
-  document.onclick = (event) => {
+  document.addEventListener("click", function changeOpen(event) {
     if (!selectMenu.value?.contains(event.target as Node)) {
       isOpen.value = false;
-      document.onclick = null;      
+      document.removeEventListener("click", changeOpen);
     }
-  };
+  });
 };
 </script>
