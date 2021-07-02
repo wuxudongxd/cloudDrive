@@ -15,7 +15,7 @@
       <div
         v-if="isOpen"
         ref="selectMenu"
-        class="fixed top-18 right-10 w-48 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200 transition"
+        class="fixed top-18 right-10 w-48 z-50 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200 transition"
       >
         <router-link
           class="flex px-4 py-2 text-gray-800 hover:bg-indigo-400 hover:text-white"
@@ -43,12 +43,11 @@ const selectItems = reactive([
 const selectMenu = ref<HTMLElement | null>(null);
 const changeSelect = () => {
   isOpen.value = !isOpen.value;
-  // 如果为同一个事件多次添加同一个监听函数，函数只会执行一次，多余的添加将自动删除，所以这里就不处理点击头像时多次绑定changeOpen函数的问题了
-  document.addEventListener("click", function changeOpen(event) {
+  document.onclick = (event) => {
     if (!selectMenu.value?.contains(event.target as Node)) {
       isOpen.value = false;
-      document.removeEventListener("click", changeOpen);
+      document.onclick = null;      
     }
-  });
+  };
 };
 </script>
