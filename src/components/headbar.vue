@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center px-6 h-16 shadow-sm">
+  <div class="flex justify-between items-center px-6 h-16 shadow-sm bg-gray-50">
     <div class="text-lg text-gray-600 font-bold">控制台</div>
     <div>
       <button
@@ -15,10 +15,10 @@
       <div
         v-if="isOpen"
         ref="selectMenu"
-        class="fixed top-18 right-10 w-48 z-50 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200"
+        class="fixed top-18 right-10 w-48 z-40 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200"
       >
         <router-link
-          class="flex px-4 py-2 text-gray-800 hover:bg-indigo-400 hover:text-white"
+          class="flex px-4 py-2 text-gray-800 hover:bg-indigo-400 hover:text-white transition duration-300 ease-in-out"
           v-for="item in selectItems"
           :to="item.link"
         >

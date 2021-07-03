@@ -22,7 +22,7 @@
       <div class="w-10/12">
         <div class="flex overflow-hidden rounded h-2 bg-gray-200">
           <div
-            style="width: 50%"
+            style="width: 44%"
             class="bg-green-500 rounded transition duration-300 ease-in-out"
           ></div>
         </div>
