@@ -4,12 +4,8 @@
   >
     <div class="max-w-md w-full space-y-8">
       <div>
-        <img
-          class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-          alt="Workflow"
-        />
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-700">简存取云盘</h2>
+        <SvgIcon name="胡萝卜" class="mx-auto h-20 w-auto"></SvgIcon>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-700">萝卜云盘</h2>
       </div>
       <form class="space-y-6">
         <input type="hidden" name="remember" value="true" />
@@ -76,6 +72,7 @@
 <script lang="ts" setup>
 import { changeLogin } from "@/router";
 import { useRouter } from "vue-router";
+import SvgIcon from "@/components/SvgIcon.vue";
 
 const router = useRouter();
 const login = () => {

@@ -2,8 +2,8 @@
   <div class="w-52 bg-gray-100 shadow flex flex-col justify-between">
     <div class="flex flex-col items-center">
       <div class="h-32 flex flex-col items-center">
-        <SvgIcon name="云盘" class="h-16 w-16 my-3"></SvgIcon>
-        <div class="font-bold text-xl text-gray-600">简存取云盘</div>
+        <SvgIcon name="胡萝卜" class="h-14 w-14 my-3"></SvgIcon>
+        <div class="font-bold text-xl text-gray-600">萝卜云盘</div>
       </div>
       <div
         v-for="item in choiceItem"
