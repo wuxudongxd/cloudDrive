@@ -4,7 +4,7 @@
       class="group w-20 h-10 flex justify-center items-center rounded bg-blue-400 hover:bg-blue-300 focus:outline-none focus:ring focus:border-blue-200"
       @click="isUploadFile = !isUploadFile"
     >
-      <SvgIcon name="上传" color="#fff" class="w-5 h-5" />
+      <SvgIcon name="上传" color="#fff" class="w-5 h-5 animate-bounce mt-1" />
       <!-- 使用了vue3的Teleport -->
       <teleport to="#teleport-target">
         <FileUpload v-model:isUploadFile="isUploadFile" />
