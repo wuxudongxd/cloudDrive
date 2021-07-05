@@ -39,7 +39,7 @@ import SvgIcon from "@/components/SvgIcon.vue";
 
 const choiceItem = reactive([
   { id: 1, name: "文件", link: "", icon: "文件夹", current: true },
-  { id: 2, name: "最近", link: "recently", icon: "时钟", current: false },
+  { id: 2, name: "最近", link: "recently", icon: "最近", current: false },
   { id: 3, name: "收藏", link: "collection", icon: "收藏", current: false },
   { id: 4, name: "分享", link: "share", icon: "分享", current: false },
   { id: 5, name: "音乐", link: "music", icon: "音乐", current: false },

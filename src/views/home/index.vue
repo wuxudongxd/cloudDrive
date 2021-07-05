@@ -1,10 +1,10 @@
 <template>
   <div class="flex h-screen">
     <Sidebar />
-    <div class="flex-1">
+    <div class="flex-1 flex flex-col">
       <Headbar />
       <Toolbar />
-      <router-view />
+      <router-view class="flex-1 overflow-auto" />
     </div>
   </div>
 </template>

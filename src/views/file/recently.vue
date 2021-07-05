@@ -1,5 +1,7 @@
 <template>
-    <div>
-        最近
-    </div>
+  <showFiles />
 </template>
+
+<script lang="ts" setup>
+import showFiles from "@/components/file/showFiles.vue";
+</script>

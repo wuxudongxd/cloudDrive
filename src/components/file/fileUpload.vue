@@ -46,12 +46,28 @@
               </div>
             </div>
           </div>
-          <div class="w-1/2 h-full flex flex-col justify-between">
-            <ul v-if="uploadList">
-              <li>名称-路径</li>
-              <li v-for="item in uploadList">{{ item.name }}-{{ item.path }}</li>
+          <div class="w-1/2 h-full flex flex-col justify-between relative">
+            <ul v-if="fileList" class="h-80 overflow-auto">
+              <li class="flex justify-evenly w-full absolute bg-gray-100 shadow-sm">
+                <span>名称</span>
+                <span>完整路径</span>
+              </li>
+              <li
+                v-for="item in fileList"
+                class="flex justify-around space-y-2 mt-10 border"
+              >
+                <span class="w-1/2 pl-10 mt-2">{{ item.name }}</span>
+                <span class="w-1/2">{{ item.path }}</span>
+              </li>
             </ul>
-            <button @click="updateFiles">上传</button>
+            <div class="flex justify-center items-center mb-5 h-20">
+              <button
+                @click="updateFiles"
+                class="text-white w-24 h-10 rounded bg-blue-500 hover:bg-blue-400 shadow transition duration-300 ease-in-out"
+              >
+                上传
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -74,18 +90,20 @@ const exitUpload = () => {
 /**
  * 文件上传逻辑部分
  */
-interface uploadListProp {
+interface fileListProp {
   name: string;
   path: string;
   file: File;
 }
-const uploadList = ref<uploadListProp[]>([]);
+const fileList = ref<fileListProp[]>([]);
+const folderList = ref<string[]>([]);
 const fileInput = ref<HTMLInputElement | null>(null);
 let isFolder = false;
-const formData = new FormData();
 
 // 调用文件上传
 const handleFile = () => {
+  isFolder = false;
+  (fileInput.value as any).webkitdirectory = false;
   fileInput.value?.click();
 };
 
@@ -102,29 +120,33 @@ const handleInput = (event: Event) => {
   if (!files || files.length <= 0) {
     return;
   }
-  uploadList.value = [];
+
+  fileList.value = [];
+  folderList.value = [];
   if (isFolder) {
     for (let i = 0; i < files.length; i++) {
-      uploadList.value.push({
-        name: files[i].name,
-        path: (files[i] as any).webkitRelativePath,
-        file: files[i],
-      });
+      const file = files[i];
+      const path = (files[i] as any).webkitRelativePath;
+      const name = file.name;
+      fileList.value.push({ name, path, file });
+      const folderPath = path.slice(0, path.length - name.length - 1);
+
+      if (
+        folderList.value.length === 0 ||
+        folderList.value[folderList.value.length - 1] !== folderPath
+      ) {
+        folderList.value.push(folderPath);
+      }
     }
   } else {
     for (let i = 0; i < files.length; i++) {
-      uploadList.value.push({
+      fileList.value.push({
         name: files[i].name,
         path: files[i].name,
         file: files[i],
       });
     }
   }
-
-  for (const item of uploadList.value) {
-    formData.append("file", item.file, item.path);
-  }
-  
 };
 
 // 通过拖拽获取文件信息
@@ -134,7 +156,8 @@ const handleDrop = (event: DragEvent) => {
     return;
   }
 
-  uploadList.value = [];
+  fileList.value = [];
+  folderList.value = [];
   for (let i = 0; i < files.length; i++) {
     if (files[i].kind === "file") {
       let entry = files[i].webkitGetAsEntry();
@@ -146,18 +169,19 @@ const handleDrop = (event: DragEvent) => {
       entry.file(
         (file: File) => {
           let path = entry.fullPath.substring(1);
-          uploadList.value.push({
+          fileList.value.push({
             name: file.name,
             path: path,
             file,
           });
-          formData.append("file", file, path);
         },
         (e: Error) => {
           console.log(e);
         }
       );
     } else {
+      // 迭代获取文件夹名
+      folderList.value.push(entry.fullPath.substring(1));
       let reader = entry.createReader();
       reader.readEntries(
         (entries: any) => {
@@ -177,7 +201,7 @@ const handleDrop = (event: DragEvent) => {
 // const previewFiles = async (files: FileList | undefined | null) => {
 //   // console.log(files);
 //   // 读取文件
-//   // const uploadList = [];
+//   // const fileList = [];
 //   // console.log(files);
 //   // const readFileAsync = (file: File) =>
 //   //   new Promise((resolve) => {
@@ -186,32 +210,45 @@ const handleDrop = (event: DragEvent) => {
 //   //     reader.readAsDataURL(file);
 //   //   });
 //   // for (let i = 0; i < files.length; i++) {
-//   //   uploadList.push(await readFileAsync(files[i]));
+//   //   fileList.push(await readFileAsync(files[i]));
 //   // }
-//   // console.log(uploadList);
+//   // console.log(fileList);
 //   // updateFiles(files);
 // };
 
 // 上传文件
 const updateFiles = () => {
-  console.log(formData.getAll("file"));
-
-  // const formData = new FormData();
-  // for (let i = 0; i < files.length; i++) {
-  //   formData.append("file", files[i], files[i].name);
-  // }
-  // const config = {
-  //   headers: { "Content-Type": "multipart/form-data" },
-  // };
-  // const url = "";
-  // axios
-  //   .post(url, formData, config)
-  //   .then(function (response) {
-  //     console.log(response.data);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  const config = {
+    headers: { "Content-Type": "multipart/form-data" },
+  };
+  // const url = "http://116.63.172.108/file/upload";
+  const url = "/file/upload";
+  if (folderList.value.length !== 0) {
+    const folderReq = [];
+    for (const folder of folderList.value) {
+      const formData = new FormData();
+      formData.append("currentDirectory", "");
+      formData.append("filename", folder);
+      folderReq.push(axios.post(url, formData, config));
+    }
+    Promise.all(folderReq).then(() => {
+      for (const item of fileList.value) {
+        const formData = new FormData();
+        formData.append("file", item.file);
+        formData.append("userId", "1");
+        formData.append("currentDirectory", "");
+        formData.append("relativePath", item.path);
+        axios
+          .post(url, formData, config)
+          .then(function (response) {
+            console.log(response.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
+  }
 };
 </script>
 

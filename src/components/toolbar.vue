@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import SvgIcon from "@/components/SvgIcon.vue";
-import FileUpload from "@/components/fileUpload.vue";
+import FileUpload from "@/components/file/fileUpload.vue";
 
 const isUploadFile = ref(false);
 </script>
