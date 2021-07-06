@@ -6,11 +6,11 @@
         <div class="font-bold text-xl text-gray-600">萝卜云盘</div>
       </div>
       <div
-        v-for="item in choiceItem"
+        v-for="(item, index) in choiceItem"
         :key="item.id"
-        @click="changeItem"
+        @click="changeItem(index)"
         :class="[
-          item.current ? 'bg-gray-300' : '',
+          index === activeItemIndex ? 'bg-gray-300' : '',
           'h-12 w-full pl-10 mt-1 flex items-center hover:bg-gray-300 transition duration-200 ease-in-out rounded-md cursor-pointer',
         ]"
       >
@@ -33,29 +33,39 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { ref, reactive } from "vue";
 import router from "@/router";
 import SvgIcon from "@/components/SvgIcon.vue";
 
-const choiceItem = reactive([
-  { id: 1, name: "文件", link: "", icon: "文件夹", current: true },
-  { id: 2, name: "最近", link: "recently", icon: "最近", current: false },
-  { id: 3, name: "收藏", link: "collection", icon: "收藏", current: false },
-  { id: 4, name: "分享", link: "share", icon: "分享", current: false },
-  { id: 5, name: "音乐", link: "music", icon: "音乐", current: false },
-  { id: 6, name: "视频", link: "video", icon: "视频", current: false },
-  { id: 7, name: "图片", link: "picture", icon: "图片", current: false },
+interface choiceItemProps {
+  id: number;
+  name: string;
+  link: string;
+  icon: string;
+  current?: boolean;
+}
+const choiceItem = reactive<choiceItemProps[]>([
+  { id: 1, name: "文件", link: "", icon: "文件夹" },
+  { id: 2, name: "最近", link: "recently", icon: "最近" },
+  { id: 3, name: "收藏", link: "collection", icon: "收藏" },
+  { id: 4, name: "分享", link: "share", icon: "分享" },
+  { id: 5, name: "音乐", link: "music", icon: "音乐" },
+  { id: 6, name: "视频", link: "video", icon: "视频" },
+  { id: 7, name: "图片", link: "picture", icon: "图片" },
 ]);
-const changeItem = (param: any) => {
-  choiceItem.forEach((item) => {
-    item.current = false;
-  });
-  for (const item of choiceItem) {
-    if (param.target.innerText === item.name) {
-      item.current = true;
-      router.push("/" + item.link);
-      break;
-    }
+
+// 初始化
+const routeValue = router.currentRoute.value.path.slice(1);
+let activeItemIndex = ref(0); // 初始激活选项为0，即侧边栏第一个
+// 从i=1，即第二项开始对比路由值
+for (let i = 1; i < choiceItem.length; i++) {
+  if (routeValue.includes(choiceItem[i].link)) {
+    activeItemIndex.value = i;
   }
+}
+
+const changeItem = (index: number) => {
+  activeItemIndex.value = index;
+  router.push("/" + choiceItem[index].link);
 };
 </script>

@@ -1,21 +1,36 @@
 <template>
   <div class="flex flex-wrap content-start px-8 pt-5 pb-10">
-    <fileItem filetype="pdf" filename="PDF文件" />
-    <fileItem filetype="docx" filename="WORD文件" />
-    <fileItem filetype="folder" filename="文件夹" />
-    <fileItem filetype="image" filename="图片" />
-    <fileItem filetype="music" filename="音乐" />
-    <fileItem filetype="pptx" filename="PPT文件" />
-    <fileItem filetype="txt" filename="文本文件" />
-    <fileItem filetype="unknown" filename="未知文件" />
-    <fileItem filetype="video" filename="视频文件" />
-    <fileItem filetype="xlsx" filename="表格文件" />
-    <fileItem filetype="zip" filename="压缩文件1234" />
+    <fileItem
+      v-for="(item, index) in fileList"
+      :key="item.id"
+      :filetype="item.filetype"
+      :filename="item.filename"
+      :isActive="index === activeFileIndex"
+      @click="activateFile(index)"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { reactive, ref } from "vue";
 import fileItem from "@/components/file/fileItem.vue";
-// import router from "@/router";
-// console.log(router.currentRoute.value.path.slice(1));
+
+const fileList = reactive([
+  { id: 1, filetype: "pdf", filename: "PDF文件" },
+  { id: 2, filetype: "docx", filename: "WORD文件" },
+  { id: 3, filetype: "folder", filename: "文件夹" },
+  { id: 4, filetype: "image", filename: "图片" },
+  { id: 5, filetype: "music", filename: "音乐" },
+  { id: 6, filetype: "pptx", filename: "PPT文件" },
+  { id: 7, filetype: "txt", filename: "文本文件" },
+  { id: 8, filetype: "unknown", filename: "未知文件" },
+  { id: 9, filetype: "video", filename: "视频文件" },
+  { id: 10, filetype: "xlsx", filename: "表格文件" },
+  { id: 11, filetype: "zip", filename: "压缩文件1234" },
+]);
+
+let activeFileIndex = ref<number>(-1);
+const activateFile = (index: number) => {
+  activeFileIndex.value = index;
+};
 </script>
