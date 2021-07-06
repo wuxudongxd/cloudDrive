@@ -26,7 +26,7 @@ const fileList = reactive([
   { id: 8, filetype: "unknown", filename: "未知文件" },
   { id: 9, filetype: "video", filename: "视频文件" },
   { id: 10, filetype: "xlsx", filename: "表格文件" },
-  { id: 11, filetype: "zip", filename: "压缩文件1234" },
+  { id: 11, filetype: "zip", filename: "压缩文件1234567" },
 ]);
 
 let activeFileIndex = ref<number>(-1);
