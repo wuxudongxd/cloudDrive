@@ -28,18 +28,12 @@
             <div class="h-4/5 flex flex-col justify-around items-center">
               <SvgIcon name="拖拽上传" class="h-40 w-40 2xl:w-72 2xl:h-72"></SvgIcon>
               <div class="flex flex-col items-center">
-                <div class="flex justify-between w-52">
+                <div class="flex justify-center w-52">
                   <button
                     class="text-white w-24 h-10 rounded bg-blue-500 hover:bg-blue-400 shadow transition duration-300 ease-in-out"
                     @click="handleFile"
                   >
                     上传文件
-                  </button>
-                  <button
-                    class="text-white w-24 h-10 rounded bg-blue-500 hover:bg-blue-400 shadow transition duration-300 ease-in-out"
-                    @click="handleFolder"
-                  >
-                    上传文件夹
                   </button>
                 </div>
                 <span class="mt-6 text-gray-500">点击上传按钮，或拖拽文件到框内上传</span>
@@ -47,12 +41,12 @@
             </div>
           </div>
           <div class="w-1/2 h-full flex flex-col justify-between">
-            <ul class="h-80 overflow-auto space-y-2">
+            <ul class="h-80 overflow-auto space-y-2 pt-4">
               <li v-for="item in fileList" class="flex justify-around items-center">
                 <span class="w-1/2 pl-4 text-sm">
                   {{
-                    item.file.name.length > 10
-                      ? item.file.name.slice(0, 20) + "..."
+                    item.file.name.length > 25
+                      ? item.file.name.slice(0, 25) + "..."
                       : item.file.name
                   }}
                 </span>
@@ -110,21 +104,9 @@ interface fileListProps {
 }
 const fileList = ref<fileListProps[]>([]);
 const fileInput = ref<HTMLInputElement | null>(null);
-let isFolder = false;
 
 // 调用文件上传
-const handleFile = () => {
-  isFolder = false;
-  (fileInput.value as any).webkitdirectory = false;
-  fileInput.value?.click();
-};
-
-// 调用文件夹上传
-const handleFolder = () => {
-  isFolder = true;
-  (fileInput.value as any).webkitdirectory = true;
-  fileInput.value?.click();
-};
+const handleFile = () => fileInput.value?.click();
 
 // 通过File类型的Input获取文件信息
 const handleInput = (event: Event) => {
@@ -134,21 +116,11 @@ const handleInput = (event: Event) => {
   }
 
   fileList.value = [];
-  if (isFolder) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      // const path = file.webkitRelativePath;
-      // 由于file.webkitRelativePath值会影响后端文件名的生成，这里path置空防止文件夹名重复
-      const path = "";
-      fileList.value.push({ file, path });
-    }
-  } else {
-    for (let i = 0; i < files.length; i++) {
-      fileList.value.push({
-        file: files[i],
-        path: files[i].name,
-      });
-    }
+  for (let i = 0; i < files.length; i++) {
+    fileList.value.push({
+      file: files[i],
+      path: files[i].name,
+    });
   }
 };
 
