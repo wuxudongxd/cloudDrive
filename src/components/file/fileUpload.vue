@@ -13,7 +13,7 @@
         </div>
         <div class="flex-1 flex bg-gray-100">
           <div
-            class="w-1/2 h-full bg-gray-300 outline"
+            class="w-1/2 h-full bg-gray-300 px-7 py-7 outline"
             @dragenter.prevent=""
             @dragover.prevent=""
             @drop.prevent="handleDrop"
@@ -46,24 +46,37 @@
               </div>
             </div>
           </div>
-          <div class="w-1/2 h-full flex flex-col justify-between relative">
-            <ul v-if="fileList" class="h-80 overflow-auto">
-              <li class="flex justify-evenly w-full absolute bg-gray-100 shadow-sm">
-                <span>名称</span>
-                <span>完整路径</span>
-              </li>
-              <li
-                v-for="item in fileList"
-                class="flex justify-around space-y-2 mt-10 border"
-              >
-                <span class="w-1/2 pl-10 mt-2">{{ item.name }}</span>
-                <span class="w-1/2">{{ item.path }}</span>
+          <div class="w-1/2 h-full flex flex-col justify-between">
+            <ul class="h-80 overflow-auto space-y-2">
+              <li v-for="item in fileList" class="flex justify-around items-center">
+                <span class="w-1/2 pl-4 text-sm">
+                  {{
+                    item.file.name.length > 10
+                      ? item.file.name.slice(0, 20) + "..."
+                      : item.file.name
+                  }}
+                </span>
+                <span class="w-1/2 flex justify-evenly items-center">
+                  <span class="w-24 flex overflow-hidden rounded h-2 bg-gray-300">
+                    <span
+                      :style="item.progress"
+                      class="bg-green-500 rounded transition duration-300 ease-in-out"
+                    ></span>
+                  </span>
+                  <span class="text-sm text-gray-600"
+                    >{{ item.progress?.match(/\d+/g)?.pop() || 0 }}%</span
+                  >
+                </span>
               </li>
             </ul>
             <div class="flex justify-center items-center mb-5 h-20">
               <button
                 @click="updateFiles"
-                class="text-white w-24 h-10 rounded bg-blue-500 hover:bg-blue-400 shadow transition duration-300 ease-in-out"
+                :disabled="!fileList.length"
+                :class="[
+                  !fileList.length ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500',
+                  'text-white w-24 h-10 rounded  hover:bg-blue-400 shadow transition duration-300 ease-in-out',
+                ]"
               >
                 上传
               </button>
@@ -90,13 +103,12 @@ const exitUpload = () => {
 /**
  * 文件上传逻辑部分
  */
-interface fileListProp {
-  name: string;
-  path: string;
+interface fileListProps {
   file: File;
+  path: string;
+  progress?: string;
 }
-const fileList = ref<fileListProp[]>([]);
-const folderList = ref<string[]>([]);
+const fileList = ref<fileListProps[]>([]);
 const fileInput = ref<HTMLInputElement | null>(null);
 let isFolder = false;
 
@@ -122,28 +134,19 @@ const handleInput = (event: Event) => {
   }
 
   fileList.value = [];
-  folderList.value = [];
   if (isFolder) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const path = (files[i] as any).webkitRelativePath;
-      const name = file.name;
-      fileList.value.push({ name, path, file });
-      const folderPath = path.slice(0, path.length - name.length - 1);
-
-      if (
-        folderList.value.length === 0 ||
-        folderList.value[folderList.value.length - 1] !== folderPath
-      ) {
-        folderList.value.push(folderPath);
-      }
+      // const path = file.webkitRelativePath;
+      // 由于file.webkitRelativePath值会影响后端文件名的生成，这里path置空防止文件夹名重复
+      const path = "";
+      fileList.value.push({ file, path });
     }
   } else {
     for (let i = 0; i < files.length; i++) {
       fileList.value.push({
-        name: files[i].name,
-        path: files[i].name,
         file: files[i],
+        path: files[i].name,
       });
     }
   }
@@ -157,7 +160,6 @@ const handleDrop = (event: DragEvent) => {
   }
 
   fileList.value = [];
-  folderList.value = [];
   for (let i = 0; i < files.length; i++) {
     if (files[i].kind === "file") {
       let entry = files[i].webkitGetAsEntry();
@@ -170,9 +172,8 @@ const handleDrop = (event: DragEvent) => {
         (file: File) => {
           let path = entry.fullPath.substring(1);
           fileList.value.push({
-            name: file.name,
-            path: path,
             file,
+            path: path,
           });
         },
         (e: Error) => {
@@ -180,8 +181,6 @@ const handleDrop = (event: DragEvent) => {
         }
       );
     } else {
-      // 迭代获取文件夹名
-      folderList.value.push(entry.fullPath.substring(1));
       let reader = entry.createReader();
       reader.readEntries(
         (entries: any) => {
@@ -218,37 +217,40 @@ const handleDrop = (event: DragEvent) => {
 
 // 上传文件
 const updateFiles = () => {
+  console.log("fileList", fileList.value);
   const config = {
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { "Content-Type": "multipart/form-data", userId: 4 },
   };
-  // const url = "http://116.63.172.108/file/upload";
-  const url = "/file/upload";
-  if (folderList.value.length !== 0) {
-    const folderReq = [];
-    for (const folder of folderList.value) {
-      const formData = new FormData();
-      formData.append("currentDirectory", "");
-      formData.append("filename", folder);
-      folderReq.push(axios.post(url, formData, config));
-    }
-    Promise.all(folderReq).then(() => {
-      for (const item of fileList.value) {
-        const formData = new FormData();
-        formData.append("file", item.file);
-        formData.append("userId", "1");
-        formData.append("currentDirectory", "");
-        formData.append("relativePath", item.path);
-        axios
-          .post(url, formData, config)
-          .then(function (response) {
-            console.log(response.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    });
+  const url = "api/file/upload";
+
+  const fileReq = [];
+  for (const item of fileList.value) {
+    const formData = new FormData();
+    formData.append("file", item.file);
+    formData.append("userId", "4");
+    formData.append("currentDirectory", "");
+    formData.append("relativePath", item.path);
+    console.log(formData.getAll("file"));
+    console.log(formData.getAll("relativePath"));
+
+    fileReq.push(
+      axios.post(url, formData, {
+        onUploadProgress: (progressEvent) => {
+          item.progress =
+            "width:" + (((progressEvent.loaded / progressEvent.total) * 100) | 0) + "%";
+        },
+        ...config,
+      })
+    );
   }
+
+  Promise.all(fileReq)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 </script>
 

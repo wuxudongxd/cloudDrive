@@ -26,8 +26,6 @@ const emit = defineEmit(["activateFile"]);
 // 过滤过长的文件名
 const filenameFilter = computed(() => {
   const filename = props.filename;
-  console.log(filename);
-
   return filename.length > 10 ? filename.slice(0, 7) + "..." : filename;
 });
 </script>
