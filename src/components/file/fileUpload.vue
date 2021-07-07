@@ -68,8 +68,10 @@
                 @click="updateFiles"
                 :disabled="!fileList.length"
                 :class="[
-                  !fileList.length ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500',
-                  'text-white w-24 h-10 rounded  hover:bg-blue-400 shadow transition duration-300 ease-in-out',
+                  !fileList.length
+                    ? 'bg-blue-300 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-400',
+                  'text-white w-24 h-10 rounded shadow transition duration-300 ease-in-out',
                 ]"
               >
                 上传
@@ -91,6 +93,7 @@ import axios from "axios";
 defineProps(["isUploadFile"]);
 const emit = defineEmit(["update:isUploadFile"]);
 const exitUpload = () => {
+  fileList.value = [];
   emit("update:isUploadFile", false);
 };
 

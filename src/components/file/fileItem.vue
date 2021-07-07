@@ -7,7 +7,7 @@
     @click="emit('activateFile', true)"
   >
     <SvgIcon :name="filetype" class="w-14 h-14 mb-3"></SvgIcon>
-    <div class="text-gray-500 text-xs w-24 h-5 text-center overflow-hidden">
+    <div class="text-gray-500 text-xs w-24 h-4 text-center overflow-hidden select-none">
       {{ filenameFilter }}
     </div>
   </span>
@@ -26,6 +26,6 @@ const emit = defineEmit(["activateFile"]);
 // 过滤过长的文件名
 const filenameFilter = computed(() => {
   const filename = props.filename;
-  return filename.length > 10 ? filename.slice(0, 7) + "..." : filename;
+  return filename.length > 10 ? filename.slice(0, 10) + "..." : filename;
 });
 </script>
