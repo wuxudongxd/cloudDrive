@@ -1,5 +1,5 @@
 <template>
-  <showFiles />
+  <showFiles queryMenu="home" />
 </template>
 
 <script lang="ts" setup>

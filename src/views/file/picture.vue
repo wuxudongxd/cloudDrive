@@ -1,5 +1,7 @@
 <template>
-    <div>
-        图片
-    </div>
+  <showFiles queryMenu="image" />
 </template>
+
+<script lang="ts" setup>
+import showFiles from "@/components/file/showFiles.vue";
+</script>

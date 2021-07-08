@@ -1,5 +1,7 @@
 <template>
-    <div>
-        分享
-    </div>
+  <showFiles queryMenu="home" />
 </template>
+
+<script lang="ts" setup>
+import showFiles from "@/components/file/showFiles.vue";
+</script>

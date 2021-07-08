@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center">
       <div class="h-32 flex flex-col items-center">
         <SvgIcon name="胡萝卜" class="h-14 w-14 my-3"></SvgIcon>
-        <div class="font-bold text-xl text-gray-600">萝卜云盘</div>
+        <div class="font-bold text-xl text-gray-600 select-none">萝卜云盘</div>
       </div>
       <div
         v-for="(item, index) in choiceItem"

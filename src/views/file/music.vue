@@ -1,5 +1,7 @@
 <template>
-    <div>
-        音乐
-    </div>
+  <showFiles queryMenu="music" />
 </template>
+
+<script lang="ts" setup>
+import showFiles from "@/components/file/showFiles.vue";
+</script>

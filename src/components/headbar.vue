@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between items-center px-6 h-16 shadow-sm bg-gray-50">
-    <div class="text-lg text-gray-600 font-bold">控制台</div>
+    <div class="text-lg text-gray-600 font-bold select-none">控制台</div>
     <div>
       <button
         class="rounded-full w-10 h-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-400"
