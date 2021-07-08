@@ -10,10 +10,10 @@ export let isLogin = localStorage.getItem("isLogin") === "true" ? true : false;
 export const changeLogin = () => (isLogin = true);
 
 router.beforeEach((to, from) => {
-  if (isLogin && to.path === "/login") {
+  if (isLogin && (to.path === "/login" || to.path === "/register")) {
     return "/";
   }
-  if (!isLogin && to.path !== "/login") {
+  if (!isLogin && to.path !== "/login" && to.path !== "/register") {
     return "/login";
   }
 });

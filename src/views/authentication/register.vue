@@ -17,7 +17,7 @@
             <input
               id="email-address"
               :required="true"
-              v-model="loginForm.username"
+              v-model="registerForm.username"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
               placeholder="请输入账号"
             />
@@ -30,9 +30,22 @@
               type="password"
               autocomplete="current-password"
               :required="true"
-              v-model="loginForm.password"
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
+              v-model="registerForm.password"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
               placeholder="请输入密码"
+            />
+          </div>
+          <div>
+            <label for="verifyPassword" class="sr-only">密码</label>
+            <input
+              id="verifyPassword"
+              name="verifyPassword"
+              type="password"
+              autocomplete="current-verifyPassword"
+              :required="true"
+              v-model="verifyPassword"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
+              placeholder="请再次输入密码"
             />
           </div>
         </div>
@@ -52,9 +65,9 @@
 
           <div class="text-sm space-x-3">
             <router-link
-              to="/register"
+              to="/login"
               class="font-medium text-indigo-600 hover:text-indigo-500"
-              >注册账户？</router-link
+              >现在登录？</router-link
             >
             <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"
               >忘记密码？</a
@@ -65,7 +78,7 @@
         <div>
           <button
             class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focuson:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            @click.prevent="login"
+            @click.prevent="register"
           >
             登录
           </button>
@@ -79,25 +92,36 @@
 import { changeLogin } from "@/router";
 import { useRouter } from "vue-router";
 import SvgIcon from "@/components/SvgIcon.vue";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import axios from "axios";
 
-const loginForm = reactive({
+const registerForm = reactive({
   username: "",
   password: "",
 });
+const verifyPassword = ref<string>("");
 
 const router = useRouter();
-const login = () => {
-  axios
-    .post("api/user/login", JSON.stringify(loginForm), {
-      headers: { "Content-Type": "application/json" },
-    })
-    .then((res) => {
-      localStorage.setItem("userId", res.data.data.id.toString());
-      localStorage.setItem("isLogin", "true");
-      changeLogin();
-      router.push("/");
-    });
+const register = () => {
+  if (registerForm.password !== verifyPassword.value) {
+    alert("两次密码输入不同！");
+  } else {
+    axios
+      .post("api/user/regist", JSON.stringify(registerForm), {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then(() => {
+        axios
+          .post("api/user/login", JSON.stringify(registerForm), {
+            headers: { "Content-Type": "application/json" },
+          })
+          .then((res) => {
+            localStorage.setItem("userId", res.data.data.id.toString());
+            localStorage.setItem("isLogin", "true");
+            changeLogin();
+            router.push("/");
+          });
+      });
+  }
 };
 </script>
