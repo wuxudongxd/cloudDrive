@@ -64,6 +64,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@nplayer/vue@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.nlark.com/@nplayer/vue/download/@nplayer/vue-1.0.9.tgz#9ac8e9b8c5aa8026af9645dccabaa97c79c7e10c"
+  integrity sha1-msjpuMWqgCavlkXcyrqpfHnH4Qw=
+
 "@popperjs/core@^2.4.4":
   version "2.9.2"
   resolved "https://registry.npm.taobao.org/@popperjs/core/download/@popperjs/core-2.9.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40popperjs%2Fcore%2Fdownload%2F%40popperjs%2Fcore-2.9.2.tgz#adea7b6953cbb34651766b0548468e743c6a2353"
@@ -1593,6 +1598,11 @@ normalize-wheel@^1.0.1:
   resolved "https://registry.npm.taobao.org/normalize-wheel/download/normalize-wheel-1.0.1.tgz#aec886affdb045070d856447df62ecf86146ec45"
   integrity sha1-rsiGr/2wRQcNhWRH32Ls+GFG7EU=
 
+nplayer@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.nlark.com/nplayer/download/nplayer-1.0.9.tgz#635d12d5fbf7d95cb08d8a071d99e70d563fa9b8"
+  integrity sha1-Y10S1fv32VywjYoHHZnnDVY/qbg=
+
 nth-check@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/nth-check/download/nth-check-2.0.0.tgz?cache=0&sync_timestamp=1606860731740&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnth-check%2Fdownload%2Fnth-check-2.0.0.tgz#1bb4f6dac70072fc313e8c9cd1417b5074c0a125"
@@ -2380,10 +2390,23 @@ util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   resolved "https://registry.npm.taobao.org/util-deprecate/download/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
+v-viewer@^3.0.9:
+  version "3.0.9"
+  resolved "https://registry.nlark.com/v-viewer/download/v-viewer-3.0.9.tgz?cache=0&sync_timestamp=1622639916244&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fv-viewer%2Fdownload%2Fv-viewer-3.0.9.tgz#1c55b1a4dcd4dc1adabdd0e03944984e84d58cc6"
+  integrity sha1-HFWxpNzU3BravdDgOUSYToTVjMY=
+  dependencies:
+    lodash "^4.17.21"
+    viewerjs "^1.9.0"
+
 vary@^1:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+viewerjs@^1.9.0:
+  version "1.10.0"
+  resolved "https://registry.nlark.com/viewerjs/download/viewerjs-1.10.0.tgz#6dcd693b548dd6d7c8371b193136d1eae180621f"
+  integrity sha1-bc1pO1SN1tfINxsZMTbR6uGAYh8=
 
 vite-plugin-svg-icons@^1.0.0:
   version "1.0.0"

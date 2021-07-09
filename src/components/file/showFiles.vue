@@ -18,23 +18,27 @@
     <div v-if="isShade" class="flex justify-center items-center h-96 w-full">
       <div v-loading="true"></div>
     </div>
-    <div v-else>
+    <transition name="el-fade-in-linear" v-else>
       <div v-if="showFiles.length" class="flex flex-wrap content-start px-8 pt-5 pb-10">
         <fileItem
           v-for="(item, index) in showFiles"
           :key="item.id"
+          :index="index"
+          :file="item"
           :filetype="item.filetype"
           :filename="item.filename"
+          :path="item.path"
           :isActive="index === activeFileIndex"
+          v-model:rightMenuIndex="rightMenuIndex"
           @click="activateFile(index)"
           @dblclick.left="handleFolder(item)"
-        />
+        />      
       </div>
       <div v-else class="flex flex-col justify-center items-center h-96">
         <SvgIcon name="暂无文件" class="w-64 h-64"></SvgIcon>
-        <span class="text-xl text-gray-500">暂无文件</span>
+        <span class="text-xl text-gray-500 select-none">暂无文件</span>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -42,10 +46,13 @@
 import { defineProps, reactive, ref } from "vue";
 import fileItem from "@/components/file/fileItem.vue";
 import SvgIcon from "@/components/SvgIcon.vue";
-import axios from "axios";
+import axios from "@/api";
 import router from "@/router";
 
 const props = defineProps({ queryMenu: { type: String } });
+
+// 控制右键打开
+const rightMenuIndex = ref<number>(-1);
 
 // 文件加载遮罩
 const isShade = ref<boolean>(true);
@@ -61,12 +68,13 @@ const activateFile = (index: number) => {
 /**
  * 请求文件并进行预处理
  */
-interface showFilesProps {
+export interface showFilesProps {
   id: number;
   extension: string;
   filetype: string;
   filename: string;
   isFolder: boolean;
+  path: string;
 }
 
 // 为文件图标匹配做准备
@@ -96,11 +104,11 @@ const currentDirectory = ref<string[]>([]);
 // currentDirectory.value = router.currentRoute.value.path.slice(1);
 
 const showFiles = ref<showFilesProps[]>([]);
-const url = "api/file/list";
-const userId = localStorage.getItem("userId") || 1;
+const url = "file/list";
+const userId = localStorage.getItem("userId");
 const query = `?userId=${userId}&queryMenu=${props.queryMenu}`;
 const config = {
-  headers: { "Content-Type": "multipart/form-data", userId },
+  headers: { "Content-Type": "multipart/form-data" },
 };
 
 const preShowFiles = (res: any) => {
@@ -143,7 +151,7 @@ const handleFolder = (file: showFilesProps) => {
     isShade.value = true;
     axios
       .get(
-        `api/file/folder?userId=${userId}&currentDirectory=/${currentDirectory.value.join(
+        `file/folder?userId=${userId}&currentDirectory=/${currentDirectory.value.join(
           "/"
         )}`,
         config
@@ -165,7 +173,7 @@ const changeFolder = (item: string) => {
   isShade.value = true;
   axios
     .get(
-      `api/file/folder?userId=${userId}&currentDirectory=/${currentDirectory.value.join(
+      `file/folder?userId=${userId}&currentDirectory=/${currentDirectory.value.join(
         "/"
       )}`,
       config
@@ -181,7 +189,7 @@ const upFolderLevel = () => {
   isShade.value = true;
   axios
     .get(
-      `api/file/folder?userId=${userId}&currentDirectory=/${currentDirectory.value.join(
+      `file/folder?userId=${userId}&currentDirectory=/${currentDirectory.value.join(
         "/"
       )}`,
       config

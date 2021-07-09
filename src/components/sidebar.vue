@@ -15,18 +15,20 @@
         ]"
       >
         <SvgIcon :name="item.icon" class="h-5 w-5 mr-3 mt-0.5"></SvgIcon>
-        {{ item.name }}
+        <div class="select-none">{{ item.name }}</div>
       </div>
     </div>
     <div class="h-16 flex justify-center items-center">
       <div class="w-10/12">
         <div class="flex overflow-hidden rounded h-2 bg-gray-200">
           <div
-            style="width: 44%"
-            class="bg-green-500 rounded transition duration-300 ease-in-out"
+            :style="capacity.progress"
+            class="bg-green-500 rounded transition duration-500 ease-in-out"
           ></div>
         </div>
-        <div class="text-xs mt-2 text-gray-600">4.4G/10GB</div>
+        <div class="text-xs mt-2 text-gray-600">
+          {{ `${capacity.value}G/${capacity.total}GB` }}
+        </div>
       </div>
     </div>
   </div>
@@ -36,7 +38,11 @@
 import { ref, reactive } from "vue";
 import router from "@/router";
 import SvgIcon from "@/components/SvgIcon.vue";
+import { capacityReq } from "@/api";
 
+/**
+ * 侧栏选项
+ */
 interface choiceItemProps {
   id: number;
   name: string;
@@ -48,7 +54,7 @@ const choiceItem = reactive<choiceItemProps[]>([
   { id: 1, name: "文件", link: "", icon: "文件夹" },
   { id: 2, name: "最近", link: "recently", icon: "最近" },
   { id: 3, name: "收藏", link: "collection", icon: "收藏" },
-  { id: 4, name: "分享", link: "share", icon: "分享" },
+  // { id: 4, name: "分享", link: "share", icon: "分享" },
   { id: 5, name: "音乐", link: "music", icon: "音乐" },
   { id: 6, name: "视频", link: "video", icon: "视频" },
   { id: 7, name: "图片", link: "picture", icon: "图片" },
@@ -68,4 +74,23 @@ const changeItem = (index: number) => {
   activeItemIndex.value = index;
   router.push("/" + choiceItem[index].link);
 };
+
+/**
+ * 初始化获取云盘容量
+ */
+const capacity = reactive({
+  value: 0,
+  total: 0,
+  progress: "",
+});
+
+capacityReq
+  .then((res) => {
+    capacity.value = Number(
+      (~~res.data.data.match(/\d+/g)[0] / 1024 / 1024 / 1024).toFixed(2)
+    );
+    capacity.total = Number(res.data.data.match(/\d+/g)[1]);
+    capacity.progress = `width: ${(capacity.value / capacity.total).toFixed(2)}%`;
+  })
+  .catch(() => {});
 </script>

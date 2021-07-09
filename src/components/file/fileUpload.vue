@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isUploadFile" class="fixed inset-0">
+  <transition name="el-fade-in-linear" v-if="isUploadFile" class="fixed inset-0">
     <div
       class="flex justify-center items-center h-screen w-screen bg-black bg-opacity-25 clouded-glass"
     >
@@ -81,13 +81,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script lang="ts" setup>
 import { ref, defineEmit, defineProps } from "vue";
 import SvgIcon from "@/components/SvgIcon.vue";
-import axios from "axios";
+import axios from "@/api";
 
 // 上传组件打开关闭状态控制
 defineProps(["isUploadFile"]);
@@ -192,22 +192,19 @@ const handleDrop = (event: DragEvent) => {
 
 // 上传文件
 const updateFiles = () => {
-  console.log("fileList", fileList.value);
   const config = {
-    headers: { "Content-Type": "multipart/form-data", userId: 4 },
+    headers: { "Content-Type": "multipart/form-data" },
   };
-  const url = "api/file/upload";
+  const url = "file/upload";
+  const userId = localStorage.getItem("userId") as string;
 
   const fileReq = [];
   for (const item of fileList.value) {
     const formData = new FormData();
     formData.append("file", item.file);
-    formData.append("userId", "4");
+    formData.append("userId", userId);
     formData.append("currentDirectory", "");
     formData.append("relativePath", item.path);
-    console.log(formData.getAll("file"));
-    console.log(formData.getAll("relativePath"));
-
     fileReq.push(
       axios.post(url, formData, {
         onUploadProgress: (progressEvent) => {

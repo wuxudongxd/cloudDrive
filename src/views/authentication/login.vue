@@ -80,7 +80,7 @@ import { changeLogin } from "@/router";
 import { useRouter } from "vue-router";
 import SvgIcon from "@/components/SvgIcon.vue";
 import { reactive } from "vue";
-import axios from "axios";
+import { loginReq } from "@/api";
 
 const loginForm = reactive({
   username: "",
@@ -89,15 +89,11 @@ const loginForm = reactive({
 
 const router = useRouter();
 const login = () => {
-  axios
-    .post("api/user/login", JSON.stringify(loginForm), {
-      headers: { "Content-Type": "application/json" },
-    })
-    .then((res) => {
-      localStorage.setItem("userId", res.data.data.id.toString());
-      localStorage.setItem("isLogin", "true");
-      changeLogin();
-      router.push("/");
-    });
+  loginReq(JSON.stringify(loginForm)).then((res) => {
+    localStorage.setItem("userId", res.data.data.id.toString());
+    localStorage.setItem("isLogin", "true");
+    changeLogin();
+    router.push("/");
+  });
 };
 </script>

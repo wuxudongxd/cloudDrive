@@ -93,7 +93,7 @@ import { changeLogin } from "@/router";
 import { useRouter } from "vue-router";
 import SvgIcon from "@/components/SvgIcon.vue";
 import { reactive, ref } from "vue";
-import axios from "axios";
+import { registerReq } from "@/api";
 
 const registerForm = reactive({
   username: "",
@@ -106,22 +106,12 @@ const register = () => {
   if (registerForm.password !== verifyPassword.value) {
     alert("两次密码输入不同！");
   } else {
-    axios
-      .post("api/user/regist", JSON.stringify(registerForm), {
-        headers: { "Content-Type": "application/json" },
-      })
-      .then(() => {
-        axios
-          .post("api/user/login", JSON.stringify(registerForm), {
-            headers: { "Content-Type": "application/json" },
-          })
-          .then((res) => {
-            localStorage.setItem("userId", res.data.data.id.toString());
-            localStorage.setItem("isLogin", "true");
-            changeLogin();
-            router.push("/");
-          });
-      });
+    registerReq(JSON.stringify(registerForm)).then((res) => {
+      localStorage.setItem("userId", res.data.data.id.toString());
+      localStorage.setItem("isLogin", "true");
+      changeLogin();
+      router.push("/");
+    });
   }
 };
 </script>
