@@ -78,8 +78,6 @@ const filenameFilter = computed({
       : filename.value;
   },
   set(val: string) {
-    console.log("val", val);
-
     filename.value = val;
   },
 });

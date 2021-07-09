@@ -1,5 +1,5 @@
 <template>
-  <showFiles queryMenu="home" />
+  <showFiles queryMenu="updatetime" />
 </template>
 
 <script lang="ts" setup>
